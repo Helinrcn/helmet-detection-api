@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  helmet-api:
+    build: .
+    container_name: helmet-detection-api
+    ports:
+      - "7001:7001"
+    volumes:
+      - ./helmet_model.pth:/app/helmet_model.pth
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
