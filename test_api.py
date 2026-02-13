@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 Helmet Detection API Test Script
 """
@@ -7,7 +7,7 @@ import requests
 import json
 from pathlib import Path
 
-# API URL
+
 BASE_URL = "http://localhost:7001"
 
 def test_root():
@@ -45,7 +45,7 @@ def test_predict(image_path):
         result = response.json()
         print(f"Response: {json.dumps(result, indent=2)}")
         
-        # Özet bilgi
+   
         print("\n📊 Tespit Özeti:")
         print(f"  - Toplam tespit: {result['summary']['total_detections']}")
         print(f"  - Baret: {result['summary']['helmet_count']}")
@@ -62,13 +62,13 @@ def main():
     print("=" * 60 + "\n")
     
     try:
-        # Test 1: Ana sayfa
+        
         test_root()
         
-        # Test 2: Sağlık kontrolü
+      
         test_health()
         
-        # Test 3: Görüntü tespiti (opsiyonel)
+      
         print("ℹ️  Test 3 için bir test görüntüsü belirtin:")
         print("    python test_api.py --image path/to/your/test_image.jpg")
         print()
@@ -82,7 +82,6 @@ def main():
 if __name__ == "__main__":
     import sys
     
-    # Komut satırından görüntü yolu al
     if len(sys.argv) > 2 and sys.argv[1] == "--image":
         image_path = sys.argv[2]
         test_predict(image_path)
@@ -94,14 +93,14 @@ if __name__ == "__main__":
 
 ---
 
-### ADIM 3: .gitignore Ekle
+
 
 1. Ana sayfaya dön
 2. **"Add file"** → **"Create new file"**
 3. **Dosya adı:** `.gitignore` (noktayı unutma!)
 4. **İçeriği yapıştır:**
 ```
-# Python
+
 __pycache__/
 *.py[cod]
 *$py.class
@@ -111,31 +110,30 @@ env/
 venv/
 ENV/
 
-# PyTorch model files
+
 *.pth
 *.pt
 *.ckpt
 
-# Jupyter Notebook
+
 .ipynb_checkpoints
 *.ipynb
 
-# IDE
+
 .vscode/
 .idea/
 *.swp
 
-# OS
+
 .DS_Store
 Thumbs.db
 
-# Test images
+
 test_images/
 *.jpg
 *.jpeg
 *.png
 
-# Logs
 *.log
 
 # Environment
