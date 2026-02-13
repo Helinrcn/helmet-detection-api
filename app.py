@@ -20,7 +20,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Global model değişkeni
 model = None
 device = None
 
@@ -42,11 +41,9 @@ async def load_model():
     try:
         logger.info("Model yükleniyor...")
         
-        # Device ayarı (GPU varsa kullan, yoksa CPU)
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         logger.info(f"Device: {device}")
         
-        # Model oluştur ve ağırlıkları yükle
         model = get_model(num_classes=3)
         model.load_state_dict(torch.load('helmet_model.pth', map_location=device))
         model.to(device)
@@ -64,7 +61,7 @@ def process_image(image: Image.Image):
     if image.mode != 'RGB':
         image = image.convert('RGB')
     
-    # Tensor'e çevir ve normalize et
+
     transform = torchvision.transforms.Compose([
         torchvision.transforms.ToTensor(),
     ])
@@ -116,36 +113,36 @@ async def predict(file: UploadFile = File(...)):
                 detail="Geçersiz dosya tipi. Lütfen bir görüntü dosyası yükleyin."
             )
         
-        # Görüntüyü oku
+     
         image_bytes = await file.read()
         image = Image.open(io.BytesIO(image_bytes))
         
         logger.info(f"Görüntü yüklendi: {file.filename}, Boyut: {image.size}")
         
-        # Görüntüyü işle
+      
         img_tensor = process_image(image).to(device)
         
-        # Tahmin yap
+     
         with torch.no_grad():
             predictions = model([img_tensor])
         
-        # Sonuçları işle
+  
         pred = predictions[0]
         boxes = pred['boxes'].cpu().numpy()
         labels = pred['labels'].cpu().numpy()
         scores = pred['scores'].cpu().numpy()
         
-        # Eşik değeri (confidence threshold)
+
         threshold = 0.5
         
-        # Sınıf isimleri
+      
         class_names = {
             0: 'background',
             1: 'helmet',  # Baret
             2: 'head'     # Kask olmayan baş
         }
         
-        # Sonuçları hazırla
+ 
         detections = []
         for box, label, score in zip(boxes, labels, scores):
             if score >= threshold:
@@ -161,7 +158,7 @@ async def predict(file: UploadFile = File(...)):
                 }
                 detections.append(detection)
         
-        # İstatistikler
+        
         helmet_count = sum(1 for d in detections if d['class'] == 'helmet')
         head_count = sum(1 for d in detections if d['class'] == 'head')
         
